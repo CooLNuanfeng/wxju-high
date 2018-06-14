@@ -7,17 +7,19 @@
   <view class="img-warp">
     <!-- <image src="http://dummyimage.com/200x100" alt=""> -->
     <canvas canvas-id="canvas"></canvas>
-    <image src="{{imgurl}}"></image>
+    <image src="{{imgurl}}" @load="imgload"></image>
   </view>
   <view class="btns">
     <text class="btn-preview" @tap="toPreview">预览</text>
-    <text class="btn-save">保存</text>
+    <text class="btn-save" @tap="toSave">保存</text>
   </view>
 </view>
 </template>
 
 <script>
 import wepy from 'wepy'
+import Haniboi from '../libs/haniboi.js';
+
 
 export default class Index extends wepy.page {
   config = {
@@ -46,6 +48,11 @@ export default class Index extends wepy.page {
         })
         }
     },
+    toSave(){
+        var context = wx.createCanvasContext('canvas')
+        var haniboi = new Haniboi(context,'content');
+        haniboi.init();
+    },
     toPreview(){
         var _this = this;
         var context = wx.createCanvasContext('canvas')
@@ -65,16 +72,19 @@ export default class Index extends wepy.page {
         context.arc(120, 80, 5, 0, 2 * Math.PI, true)
         context.stroke()
         context.draw(false,function(){
+            wx.showLoading();
             wx.canvasToTempFilePath({
               x: 0,
               y: 0,
               canvasId: 'canvas',
               success: function(res) {
-                  console.log(res);
-                  _this.imgurl = res.tempFilePath
+                  _this.imgurl = res.tempFilePath;
               }
             })
         });
+    },
+    imgload(){
+        wx.hideLoading();
     }
   }
 }
@@ -104,12 +114,15 @@ export default class Index extends wepy.page {
 }
 .img-warp {
     padding-bottom: 20rpx;
-    image {
-        width: 100%;
+    text-align: center;
+    image{
+        width: 500rpx;
+        height: 500rpx;
     }
     canvas {
-        width: 710rpx;
+        width: 500rpx;
         height: 500rpx;
+        margin: 0 auto;
     }
 }
 .btns {
