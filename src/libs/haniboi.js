@@ -155,7 +155,8 @@ Haniboi.prototype.getFileNames = function(t) {
 Haniboi.prototype.loadImages = function() {
     for(var i=2;i<27;i++){
         i<10 ? i = '0'+i : i;
-        var src = 'https://xiaoming.yaoxingfuo.com/xiaoren/xiaoren2/materials/4'+ i + '.png';
+        // var src = 'https://xiaoming.yaoxingfuo.com/xiaoren/xiaoren2/materials/4'+ i + '.png';
+        var src = '../images/4'+ i + '.png';
         this.imgs.push(src);
     }
 }
@@ -185,13 +186,16 @@ Haniboi.prototype.createMan = function(t) {
     this.iy = this.iy + this.dimensions.image.gapY;
     this.canvas.beginPath(),
     t ? (i = new Image).src = "../images/401.png" : i = this.randImg();
-    console.log(i[1]);
+    console.log(i[1],'src');
     wx.getImageInfo({
         src: i[1],
         success: function (res) {
             console.log(res,'getImageInfo');
-            _this.canvas.drawImage(res.path, _this.ix, _this.iy, _this.dimensions.image.w, _this.dimensions.image.h);
+            _this.canvas.drawImage('../'+res.path, 0,0,500,500);
             _this.canvas.draw();
+        },
+        fail: function(){
+            console.log('fail');
         }
     });
 }

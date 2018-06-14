@@ -5,7 +5,6 @@
     <textarea placeholder="请输入文字，支持空格和换行" maxlength="50" @blur="checkLenFn" @input="checkLenFn" />
   </view>
   <view class="img-warp">
-    <!-- <image src="http://dummyimage.com/200x100" alt=""> -->
     <canvas canvas-id="canvas"></canvas>
     <image src="{{imgurl}}" @load="imgload"></image>
   </view>
