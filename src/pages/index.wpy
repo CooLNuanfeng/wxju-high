@@ -1,0 +1,139 @@
+<template>
+<view class="container">
+  <view class="title"><text>Will To Say</text></view>
+  <view class="content">
+    <textarea placeholder="请输入文字，支持空格和换行" maxlength="50" @blur="checkLenFn" @input="checkLenFn" />
+  </view>
+  <view class="img-warp">
+    <!-- <image src="http://dummyimage.com/200x100" alt=""> -->
+    <canvas canvas-id="canvas"></canvas>
+    <image src="{{imgurl}}"></image>
+  </view>
+  <view class="btns">
+    <text class="btn-preview" @tap="toPreview">预览</text>
+    <text class="btn-save">保存</text>
+  </view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class Index extends wepy.page {
+  config = {
+    navigationBarTitleText: 'test'
+  }
+  data = {
+      imgurl : ''
+  }
+  onLoad() {
+    console.log(wx.canIUse('canvasContext.draw'));
+    console.log('version: ',wx.getSystemInfoSync());
+  }
+  methods = {
+    checkLenFn(evt) {
+        if (evt.detail.value.length >= 50) {
+            wx.showModal({
+                title: '提示',
+                content: '为了图片更加美观，请保持在50个文字以内',
+            success: function(res) {
+                if (res.confirm) {
+                  console.log('用户点击确定')
+                } else if (res.cancel) {
+                  console.log('用户点击取消')
+                }
+            }
+        })
+        }
+    },
+    toPreview(){
+        var _this = this;
+        var context = wx.createCanvasContext('canvas')
+        context.setStrokeStyle("#00ff00")
+        context.setLineWidth(5)
+        context.rect(0, 0, 200, 200)
+        context.stroke()
+        context.setStrokeStyle("#ff0000")
+        context.setLineWidth(2)
+        context.moveTo(160, 100)
+        context.arc(100, 100, 60, 0, 2 * Math.PI, true)
+        context.moveTo(140, 100)
+        context.arc(100, 100, 40, 0, Math.PI, false)
+        context.moveTo(85, 80)
+        context.arc(80, 80, 5, 0, 2 * Math.PI, true)
+        context.moveTo(125, 80)
+        context.arc(120, 80, 5, 0, 2 * Math.PI, true)
+        context.stroke()
+        context.draw(false,function(){
+            wx.canvasToTempFilePath({
+              x: 0,
+              y: 0,
+              canvasId: 'canvas',
+              success: function(res) {
+                  console.log(res);
+                  _this.imgurl = res.tempFilePath
+              }
+            })
+        });
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+@import '../libs/common.scss';
+.container {
+    padding: 20rpx;
+}
+.title {
+    padding-bottom: 20rpx;
+    text-align: center;
+    font-size: 40rpx;
+    color: #333;
+}
+.content {
+    padding-bottom: 20rpx;
+    textarea {
+        width: 100%;
+        padding: 10rpx;
+        box-sizing: border-box;
+        border: 1rpx solid #ddd;
+        border-radius: 4rpx;
+        font-size: 28rpx;
+    }
+}
+.img-warp {
+    padding-bottom: 20rpx;
+    image {
+        width: 100%;
+    }
+    canvas {
+        width: 710rpx;
+        height: 500rpx;
+    }
+}
+.btns {
+    display: flex;
+    text {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        border-radius: 4px;
+        height: 80rpx;
+        font-size: 26rpx;
+    }
+}
+.btn-preview {
+    margin-right: 20rpx;
+    border: 1rpx solid #38b7ea;
+    color: #38b7ea;
+    background: #fff;
+}
+.btn-save {
+    margin-left: 20rpx;
+    background: #38b7ea;
+    color: #fff;
+}
+</style>
