@@ -2,14 +2,14 @@
 <view class="container">
   <view class="title"><text>Will To Say</text></view>
   <view class="content">
-    <textarea placeholder="请输入文字，支持空格和换行" maxlength="50" @blur="checkLenFn" @input="checkLenFn" />
+    <textarea placeholder="请输入文字，支持空格和换行" maxlength="50" @input="checkLenFn" />
   </view>
   <view class="img-warp">
-    <canvas canvas-id="canvas"></canvas>
-    <image src="{{imgurl}}" @load="imgload"></image>
+     <canvas canvas-id="people-canvas"></canvas>
+     <canvas canvas-id="text-canvas"></canvas>
   </view>
   <view class="btns">
-    <text class="btn-preview" @tap="toPreview">预览</text>
+    <!-- <text class="btn-preview" @tap="toPreview">预览</text> -->
     <text class="btn-save" @tap="toSave">保存</text>
   </view>
 </view>
@@ -17,7 +17,8 @@
 
 <script>
 import wepy from 'wepy'
-import Haniboi from '../libs/haniboi.js';
+import JuhighPeople from '../libs/juhigh-people.js';
+import JuhighText from '../libs/juhigh-text.js';
 
 
 export default class Index extends wepy.page {
@@ -25,7 +26,8 @@ export default class Index extends wepy.page {
     navigationBarTitleText: 'test'
   }
   data = {
-      imgurl : ''
+      imgurl : '',
+      words : ''
   }
   onLoad() {
     console.log(wx.canIUse('canvasContext.draw'));
@@ -33,24 +35,42 @@ export default class Index extends wepy.page {
   }
   methods = {
     checkLenFn(evt) {
-        if (evt.detail.value.length >= 50) {
+        var t = this;
+        t.words = evt.detail.value;
+        if (t.words.length >= 50) {
             wx.showModal({
                 title: '提示',
                 content: '为了图片更加美观，请保持在50个文字以内',
-            success: function(res) {
-                if (res.confirm) {
-                  console.log('用户点击确定')
-                } else if (res.cancel) {
-                  console.log('用户点击取消')
+                success: function(res) {
+                    if (res.confirm) {
+                      console.log('用户点击确定')
+                    } else if (res.cancel) {
+                      console.log('用户点击取消')
+                    }
                 }
-            }
-        })
+            })
+        }else{
+            var peopleCxt = wx.createCanvasContext('people-canvas'),
+                textCxt = wx.createCanvasContext('text-canvas'),
+                txtJuhigh = new JuhighText(textCxt,t.words),
+                peoJuhigh = new JuhighPeople(peopleCxt,t.words);
+
+            txtJuhigh.init(function(){});
+            peoJuhigh.init(function(){
+                // wx.canvasToTempFilePath({
+                //   x: 0,
+                //   y: 0,
+                //   canvasId: 'canvas',
+                //   success: function(res) {
+                //       console.log(res.tempFilePath,'finish path');
+                //       _this.imgurl = res.tempFilePath;
+                //   }
+                // })
+            });
         }
     },
     toSave(){
-        var context = wx.createCanvasContext('canvas')
-        var haniboi = new Haniboi(context,'content');
-        haniboi.init();
+
     },
     toPreview(){
         var _this = this;
@@ -112,16 +132,16 @@ export default class Index extends wepy.page {
     }
 }
 .img-warp {
+    position: relative;
     padding-bottom: 20rpx;
     text-align: center;
-    image{
+    height: 520rpx;
+    canvas{
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 500rpx;
         height: 500rpx;
-    }
-    canvas {
-        width: 500rpx;
-        height: 500rpx;
-        margin: 0 auto;
     }
 }
 .btns {
@@ -147,5 +167,13 @@ export default class Index extends wepy.page {
     margin-left: 20rpx;
     background: #38b7ea;
     color: #fff;
+}
+.hidden{
+    display: none;
+}
+canvas {
+    width: 500rpx;
+    height: 500rpx;
+    margin: 0 auto;
 }
 </style>
