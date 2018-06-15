@@ -70,8 +70,9 @@ Juhigh.prototype.drawCanvas = function(){
     },Promise.resolve());
 
     promise.then(()=>{
-        t.canvas.draw();
-        t.drawcallback && t.drawcallback();
+        t.canvas.draw(false,function(){
+            t.drawcallback && t.drawcallback();
+        });
     }).catch((err)=>{
         console.log(err);
     })

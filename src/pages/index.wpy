@@ -5,8 +5,13 @@
     <textarea placeholder="请输入文字，支持空格和换行" maxlength="50" @input="checkLenFn" />
   </view>
   <view class="img-warp">
-     <canvas canvas-id="people-canvas"></canvas>
-     <canvas canvas-id="text-canvas"></canvas>
+     <view>
+         <canvas canvas-id="people-canvas"></canvas>
+         <canvas canvas-id="text-canvas"></canvas>
+     </view>
+    <view>
+         <canvas canvas-id="canvas"></canvas>
+    </view>
   </view>
   <view class="btns">
     <!-- <text class="btn-preview" @tap="toPreview">预览</text> -->
@@ -23,16 +28,25 @@ import JuhighText from '../libs/juhigh-text.js';
 
 export default class Index extends wepy.page {
   config = {
-    navigationBarTitleText: 'test'
+    navigationBarTitleText: 'test',
   }
   data = {
-      imgurl : '',
-      words : ''
+      words : '',
+      peopleImg : '',
+      textImg : ''
   }
   onLoad() {
     console.log(wx.canIUse('canvasContext.draw'));
     console.log('version: ',wx.getSystemInfoSync());
   }
+
+  onShareAppMessage() {
+      return {
+        title: '自定义转发标题',
+        path: '/page/user?id=123'
+      }
+  }
+
   methods = {
     checkLenFn(evt) {
         var t = this;
@@ -55,55 +69,68 @@ export default class Index extends wepy.page {
                 txtJuhigh = new JuhighText(textCxt,t.words),
                 peoJuhigh = new JuhighPeople(peopleCxt,t.words);
 
-            txtJuhigh.init(function(){});
-            peoJuhigh.init(function(){
-                // wx.canvasToTempFilePath({
-                //   x: 0,
-                //   y: 0,
-                //   canvasId: 'canvas',
-                //   success: function(res) {
-                //       console.log(res.tempFilePath,'finish path');
-                //       _this.imgurl = res.tempFilePath;
-                //   }
-                // })
+
+            txtJuhigh.init(function(){
+                wx.canvasToTempFilePath({
+                  x: 0,
+                  y: 0,
+                  canvasId: 'text-canvas',
+                  success: function(res) {
+                      console.log('end',res.tempFilePath);
+                      t.textImg = res.tempFilePath;
+                  },
+                  fail: function(){}
+                })
             });
+            peoJuhigh.init(function(){
+                wx.canvasToTempFilePath({
+                  x: 0,
+                  y: 0,
+                  canvasId: 'people-canvas',
+                  success: function(res) {
+                      console.log('end',res.tempFilePath);
+                      t.peopleImg = res.tempFilePath;
+                  },
+                  fail: function(){}
+                })
+            });
+
         }
     },
     toSave(){
 
-    },
-    toPreview(){
-        var _this = this;
-        var context = wx.createCanvasContext('canvas')
-        context.setStrokeStyle("#00ff00")
-        context.setLineWidth(5)
-        context.rect(0, 0, 200, 200)
-        context.stroke()
-        context.setStrokeStyle("#ff0000")
-        context.setLineWidth(2)
-        context.moveTo(160, 100)
-        context.arc(100, 100, 60, 0, 2 * Math.PI, true)
-        context.moveTo(140, 100)
-        context.arc(100, 100, 40, 0, Math.PI, false)
-        context.moveTo(85, 80)
-        context.arc(80, 80, 5, 0, 2 * Math.PI, true)
-        context.moveTo(125, 80)
-        context.arc(120, 80, 5, 0, 2 * Math.PI, true)
-        context.stroke()
-        context.draw(false,function(){
-            wx.showLoading();
+        var t = this,
+            canvas = wx.createCanvasContext('canvas');
+
+
+        canvas.drawImage(t.peopleImg, 0,0);
+        canvas.drawImage(t.textImg, 0,0);
+
+        // console.log(t.peopleImg);
+        // console.log(t.textImg);
+        // return;
+
+        canvas.draw(false,function(){
+
             wx.canvasToTempFilePath({
               x: 0,
               y: 0,
               canvasId: 'canvas',
               success: function(res) {
-                  _this.imgurl = res.tempFilePath;
+                  console.log(res.tempFilePath,'dd');
+                  wx.saveImageToPhotosAlbum({
+                      filePath: res.tempFilePath,
+                      success: function(){
+                          console.log('success');
+                      }
+                  })
+              },
+              fail: function(){
+                console.log('fail');
               }
             })
-        });
-    },
-    imgload(){
-        wx.hideLoading();
+        })
+
     }
   }
 }
@@ -135,7 +162,21 @@ export default class Index extends wepy.page {
     position: relative;
     padding-bottom: 20rpx;
     text-align: center;
+    width: 500rpx;
     height: 520rpx;
+    margin: 0 auto;
+    view{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 500rpx;
+        height: 500rpx;
+        z-index: 5;
+        background: #fff;
+        &:last-child{
+            z-index: 2;
+        }
+    }
     canvas{
         position: absolute;
         top: 0;
@@ -168,12 +209,5 @@ export default class Index extends wepy.page {
     background: #38b7ea;
     color: #fff;
 }
-.hidden{
-    display: none;
-}
-canvas {
-    width: 500rpx;
-    height: 500rpx;
-    margin: 0 auto;
-}
+
 </style>

@@ -60,11 +60,9 @@ Juhigh.prototype.drawCanvas = function(){
 
      });
 
-     t.canvas.draw();
-}
-
-
-Juhigh.prototype.createText = function(t) {
+     t.canvas.draw(false,function(){
+         t.drawcallback && t.drawcallback();
+     });
 
 }
 

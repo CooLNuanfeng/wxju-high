@@ -13,9 +13,10 @@ export default class extends wepy.app {
       navigationBarTextStyle: 'black'
     }
   }
-
   onLaunch() {
     console.log('on launch')
+    wx.authorize({scope: "scope.userInfo"})
   }
+
 }
 </script>
