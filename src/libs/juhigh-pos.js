@@ -53,12 +53,8 @@ module.exports = {
                 x: 30,
                 y: 0
             },
-            textZn: {
-                x: 8,
-                y: -23
-            },
-            textEn: {
-                x: 8,
+            text: {
+                x: 7,
                 y: -18
             }
         },
@@ -68,7 +64,7 @@ module.exports = {
             w: 45,
             h: 82
         },
-        textZn: {
+        text: {
             gapX: 18,
             gapY: .9,
             scaleX: 1.3,
@@ -77,29 +73,15 @@ module.exports = {
             skewV: -1.5,
             moveX: 2,
             moveY: 32,
-            fontSize: 11
-        },
-        textEn: {
-            gapX: 18,
-            gapY: .9,
-            scaleX: 1.3,
-            scaleY: 1,
-            skewH: .6,
-            skewV: -1.5,
-            moveX: 2,
-            moveY: 32,
-            fontSize: 11
+            fontSizeZh: 11,
+            fontSizeEn: 18
         },
         linebreak: {
             image: {
                 x: -20,
                 y: 30
             },
-            textZn: {
-                x: -.8,
-                y: 35.5
-            },
-            textEn: {
+            text: {
                 x: -.8,
                 y: 35.5
             }
