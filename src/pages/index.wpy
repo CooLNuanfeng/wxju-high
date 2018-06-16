@@ -1,21 +1,17 @@
 <template>
 <view class="container">
-  <view class="title"><text>Will To Say</text></view>
-  <view class="content">
-    <textarea placeholder="请输入文字，支持空格和换行" maxlength="50" @input="checkLenFn" />
+  <view class="area-title">预览</view>
+  <view class="preview">
+      <canvas canvas-id="canvas"></canvas>
+      <canvas canvas-id="people-canvas"></canvas>
+      <canvas canvas-id="text-canvas"></canvas>
   </view>
-  <view class="img-warp">
-     <view>
-         <canvas canvas-id="people-canvas"></canvas>
-         <canvas canvas-id="text-canvas"></canvas>
-     </view>
-    <view>
-         <canvas canvas-id="canvas"></canvas>
-    </view>
+  <view class="content">
+    <textarea value="{{words}}" placeholder="请输入文字，支持空格和换行" maxlength="50" @input="inputFn" />
   </view>
   <view class="btns">
-    <!-- <text class="btn-preview" @tap="toPreview">预览</text> -->
-    <text class="btn-save" @tap="toSave">保存</text>
+    <text class="btn-clear" @tap="toClear">清空内容</text>
+    <text class="btn-save {{!words?'btn-disable':''}}" @tap="toSave">保存到相册</text>
   </view>
 </view>
 </template>
@@ -24,31 +20,43 @@
 import wepy from 'wepy'
 import JuhighPeople from '../libs/juhigh-people.js';
 import JuhighText from '../libs/juhigh-text.js';
-
+import posJson from '../libs/juhigh-pos.js';
 
 export default class Index extends wepy.page {
   config = {
-    navigationBarTitleText: 'test',
+      navigationBarTitleText: '举牌表情生成器',
   }
   data = {
       words : '',
       peopleImg : '',
-      textImg : ''
+      textImg : '',
+      type : 'square'
   }
   onLoad() {
-    console.log(wx.canIUse('canvasContext.draw'));
-    console.log('version: ',wx.getSystemInfoSync());
+    // console.log(wx.canIUse('canvasContext.draw'));
+    // console.log('version: ',wx.getSystemInfoSync());
   }
 
   onShareAppMessage() {
       return {
-        title: '自定义转发标题',
-        path: '/page/user?id=123'
+        title: '举牌表情生成器',
+        path: '/page/index'
       }
   }
 
   methods = {
-    checkLenFn(evt) {
+    toClear(){
+        var peopleCxt = wx.createCanvasContext('people-canvas'),
+            textCxt = wx.createCanvasContext('text-canvas'),
+            t = this;
+
+        t.words = '';
+        peopleCxt.clearRect(0, 0, posJson[t.type].canvas.w, posJson[t.type].canvas.w);
+        textCxt.clearRect(0, 0, posJson[t.type].canvas.w, posJson[t.type].canvas.w);
+        peopleCxt.draw();
+        textCxt.draw();
+    },
+    inputFn(evt) {
         var t = this;
         t.words = evt.detail.value;
         if (t.words.length >= 50) {
@@ -57,9 +65,9 @@ export default class Index extends wepy.page {
                 content: '为了图片更加美观，请保持在50个文字以内',
                 success: function(res) {
                     if (res.confirm) {
-                      console.log('用户点击确定')
+                      // console.log('用户点击确定')
                     } else if (res.cancel) {
-                      console.log('用户点击取消')
+                      // console.log('用户点击取消')
                     }
                 }
             })
@@ -74,9 +82,11 @@ export default class Index extends wepy.page {
                 wx.canvasToTempFilePath({
                   x: 0,
                   y: 0,
+                  destWidth: txtJuhigh.canvas.width,
+                  destHeight: txtJuhigh.canvas.height,
                   canvasId: 'text-canvas',
                   success: function(res) {
-                      console.log('end',res.tempFilePath);
+                      // console.log('end',res.tempFilePath);
                       t.textImg = res.tempFilePath;
                   },
                   fail: function(){}
@@ -86,9 +96,11 @@ export default class Index extends wepy.page {
                 wx.canvasToTempFilePath({
                   x: 0,
                   y: 0,
+                  destWidth: peoJuhigh.canvas.width,
+                  destHeight: peoJuhigh.canvas.height,
                   canvasId: 'people-canvas',
                   success: function(res) {
-                      console.log('end',res.tempFilePath);
+                      // console.log('end',res.tempFilePath);
                       t.peopleImg = res.tempFilePath;
                   },
                   fail: function(){}
@@ -99,29 +111,48 @@ export default class Index extends wepy.page {
     },
     toSave(){
 
-        var t = this,
+        var t = this,startX,startY,
             canvas = wx.createCanvasContext('canvas');
 
+        if(!t.words){
+            return;
+        }
 
-        canvas.drawImage(t.peopleImg, 0,0);
-        canvas.drawImage(t.textImg, 0,0);
-
-        // console.log(t.peopleImg);
-        // console.log(t.textImg);
+        canvas.width = posJson[t.type].canvas.w;
+        canvas.height = posJson[t.type].canvas.h;
+        // console.log(canvas.width,canvas.height,'canvas width height');
+        canvas.setFillStyle('#ffffff');
+        canvas.fillRect(0, 0, canvas.width, canvas.height);
+        // setTimeout(function(){
+        //     canvas.clearRect(0, 0, canvas.width, canvas.height);
+        //     canvas.draw();
+        // },2000);
+        // canvas.draw();
         // return;
 
-        canvas.draw(false,function(){
+        canvas.drawImage(t.peopleImg, 0,0,canvas.width/2,canvas.height/2);
+        canvas.drawImage(t.textImg, 0,0,canvas.width/2,canvas.height/2);
 
+
+        canvas.draw(false,function(){
             wx.canvasToTempFilePath({
               x: 0,
               y: 0,
               canvasId: 'canvas',
               success: function(res) {
-                  console.log(res.tempFilePath,'dd');
+                  // console.log('draw end',res.tempFilePath);
                   wx.saveImageToPhotosAlbum({
                       filePath: res.tempFilePath,
                       success: function(){
-                          console.log('success');
+                          wx.showToast({
+                              title: '成功',
+                              icon: 'success',
+                              duration: 2000
+                          });
+                          setTimeout(()=>{
+                              canvas.clearRect(0, 0, canvas.width, canvas.height);
+                              canvas.draw();
+                          },10);
                       }
                   })
               },
@@ -140,6 +171,8 @@ export default class Index extends wepy.page {
 @import '../libs/common.scss';
 .container {
     padding: 20rpx;
+    height: 1000rpx;
+    overflow: hidden;
 }
 .title {
     padding-bottom: 20rpx;
@@ -151,6 +184,7 @@ export default class Index extends wepy.page {
     padding-bottom: 20rpx;
     textarea {
         width: 100%;
+        height: 280rpx;
         padding: 10rpx;
         box-sizing: border-box;
         border: 1rpx solid #ddd;
@@ -158,25 +192,35 @@ export default class Index extends wepy.page {
         font-size: 28rpx;
     }
 }
-.img-warp {
-    position: relative;
-    padding-bottom: 20rpx;
+.area-title{
+    padding: 0 20rpx;
+    margin-bottom: 15rpx;
+    font-size: 28rpx;
     text-align: center;
-    width: 500rpx;
-    height: 520rpx;
-    margin: 0 auto;
-    view{
-        position: absolute;
-        top: 0;
-        left: 0;
+    font-weight: bold;
+    color: #111;
+}
+.result {
+    padding-top: 30rpx;
+    .result-warp{
+        width: 500rpx;
+        margin: 0 auto;
+        border: 1rpx solid #dedede;
+        border-radius: 4rpx;
+    }
+    canvas{
         width: 500rpx;
         height: 500rpx;
-        z-index: 5;
-        background: #fff;
-        &:last-child{
-            z-index: 2;
-        }
     }
+}
+.preview{
+    position: relative;
+    width: 500rpx;
+    height: 500rpx;
+    margin: 0 auto;
+    border: 1rpx solid #dedede;
+    border-radius: 4rpx;
+    margin-bottom: 20rpx;
     canvas{
         position: absolute;
         top: 0;
@@ -198,16 +242,22 @@ export default class Index extends wepy.page {
         font-size: 26rpx;
     }
 }
-.btn-preview {
+.btn-clear {
     margin-right: 20rpx;
     border: 1rpx solid #38b7ea;
     color: #38b7ea;
+    font-weight: bold;
     background: #fff;
 }
 .btn-save {
     margin-left: 20rpx;
     background: #38b7ea;
     color: #fff;
+    font-size: 30rpx;
+    font-weight: bold;
+}
+.btn-disable{
+    opacity: .5;
 }
 
 </style>

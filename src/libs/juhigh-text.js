@@ -19,6 +19,9 @@ Juhigh.prototype.setSize = function(type) {
 Juhigh.prototype.init = function(cb) {
     this.setSize(this.type);
 
+    this.canvas.width = this.dimensions.canvas.w;
+    this.canvas.height = this.dimensions.canvas.h;
+
     this.base.tx = this.dimensions.start.text.x;
     this.base.ty = this.dimensions.start.text.y;
 

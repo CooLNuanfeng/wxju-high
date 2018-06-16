@@ -21,6 +21,9 @@ Juhigh.prototype.init = function(cb) {
     this.setSize(this.type);
     this.loadImages();
 
+    this.canvas.width = this.dimensions.canvas.w;
+    this.canvas.height = this.dimensions.canvas.h;
+
     this.base.ix = this.dimensions.start.image.x;
     this.base.iy = this.dimensions.start.image.y;
 
