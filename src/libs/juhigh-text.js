@@ -14,7 +14,7 @@ function Juhigh(canvas,words,platform,type) {
 }
 Juhigh.prototype.setSize = function(type) {
     var platform = this.platform;
-    console.log(platform,'text Juhigh');
+    // console.log(platform,'text Juhigh');
     "rectangle" === type ? this.dimensions = posJson[platform].rectangle: "square" === type && (this.dimensions = posJson[platform].square);
 }
 

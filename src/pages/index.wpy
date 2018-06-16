@@ -136,7 +136,7 @@ export default class Index extends wepy.page {
                 }
             })
         }else{
-            console.log(platform,'input');
+            // console.log(platform,'input');
             var peopleCxt = wx.createCanvasContext('people-canvas'),
                 textCxt = wx.createCanvasContext('text-canvas'),
                 txtJuhigh = new JuhighText(textCxt,t.words,platform),
