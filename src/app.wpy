@@ -13,8 +13,18 @@ export default class extends wepy.app {
       navigationBarTextStyle: 'black'
     }
   }
+  globalData = {
+      platform : ''
+  }
   onLaunch() {
-    // console.log('on launch')
+    var systemInfo = wx.getSystemInfoSync(),
+        platform = systemInfo.platform;
+
+    if(platform === 'devtools'){
+        platform = 'ios'
+    }
+    this.globalData.platform = platform;
+    console.log(this.globalData.platform,'on launch')
   }
 
 }

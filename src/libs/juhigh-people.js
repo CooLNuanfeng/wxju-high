@@ -1,6 +1,6 @@
 import posJson from './juhigh-pos.js';
 
-function Juhigh(canvas,words,type) {
+function Juhigh(canvas,words,platform,type) {
 
     this.canvas = canvas;
     this.words = words;
@@ -9,12 +9,14 @@ function Juhigh(canvas,words,type) {
     this.type = type || 'square';
     this.imgs = [];
     this.drawcallback = null;
-
+    this.platform = platform;
 }
 
 
 Juhigh.prototype.setSize = function(type) {
-    "rectangle" === type ? this.dimensions = posJson.rectangle : "square" === type && (this.dimensions = posJson.square);
+    var platform = this.platform;
+    console.log(platform,'people Juhigh');
+    "rectangle" === type ? this.dimensions = posJson[platform].rectangle : "square" === type && (this.dimensions = posJson[platform].square);
 }
 
 Juhigh.prototype.init = function(cb) {

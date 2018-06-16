@@ -1,19 +1,21 @@
 import posJson from './juhigh-pos.js';
 
-function Juhigh(canvas,words,type) {
+function Juhigh(canvas,words,platform,type) {
 
     this.canvas = canvas;
     this.words = words;
     this.base = {};
     this.dimensions = null;
     this.type = type || 'square';
-    this.transformed = true;
+    this.platform = platform;
 
     this.drawcallback = null;
 
 }
 Juhigh.prototype.setSize = function(type) {
-    "rectangle" === type ? this.dimensions = posJson.rectangle: "square" === type && (this.dimensions = posJson.square);
+    var platform = this.platform;
+    console.log(platform,'text Juhigh');
+    "rectangle" === type ? this.dimensions = posJson[platform].rectangle: "square" === type && (this.dimensions = posJson[platform].square);
 }
 
 Juhigh.prototype.init = function(cb) {
@@ -39,7 +41,13 @@ Juhigh.prototype.drawCanvas = function(){
     t.words = t.words.replace(/\n/g, "£");
 
     t.canvas.transform(t.dimensions.text.scaleX, t.dimensions.text.skewH, t.dimensions.text.skewV, t.dimensions.text.scaleY, t.dimensions.text.moveX, t.dimensions.text.moveY);
-    t.canvas.rotate(-.8 * Math.PI / 180);
+
+    if(t.platform == 'android'){
+        t.canvas.rotate(-6.3 * Math.PI / 180);
+    }else{
+        t.canvas.rotate(-1 * Math.PI / 180);
+    }
+
 
     t.words.split("").forEach((word)=>{
         if(word === "£"){
@@ -54,6 +62,7 @@ Juhigh.prototype.drawCanvas = function(){
             color = "♥" === color ? "#ca2626" : "❤" === color ? "#d92b6d" : "#40210f";
             t.canvas.fillStyle = color;
             t.canvas.textAlign = "center";
+            t.canvas.textBaseline ='middle';
             t.canvas.beginPath();
 
             encodeURIComponent(word).length > 1 ? t.canvas.font = "900 " + t.dimensions.text.fontSizeZh + "px 'LiHei Pro','微软正黑体','Microsoft JhengHei'" : t.canvas.font = "bold " + t.dimensions.text.fontSizeEn + "px 'Conv_ITC Avant Garde Gothic LT Bold', 'Ariel Black', 'Ariel'";

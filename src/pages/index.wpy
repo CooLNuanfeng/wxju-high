@@ -110,16 +110,18 @@ export default class Index extends wepy.page {
     toClear(){
         var peopleCxt = wx.createCanvasContext('people-canvas'),
             textCxt = wx.createCanvasContext('text-canvas'),
-            t = this;
+            t = this,
+            platform = t.$parent.globalData.platform;
 
         t.words = '';
-        peopleCxt.clearRect(0, 0, posJson[t.type].canvas.w, posJson[t.type].canvas.w);
-        textCxt.clearRect(0, 0, posJson[t.type].canvas.w, posJson[t.type].canvas.w);
+        peopleCxt.clearRect(0, 0, posJson[platform][t.type].canvas.w, posJson[platform][t.type].canvas.w);
+        textCxt.clearRect(0, 0, posJson[platform][t.type].canvas.w, posJson[platform][t.type].canvas.w);
         peopleCxt.draw();
         textCxt.draw();
     },
     inputFn(evt) {
-        var t = this;
+        var t = this,platform = t.$parent.globalData.platform;
+
         t.words = evt.detail.value;
         if (t.words.length >= 50) {
             wx.showModal({
@@ -134,18 +136,19 @@ export default class Index extends wepy.page {
                 }
             })
         }else{
+            console.log(platform,'input');
             var peopleCxt = wx.createCanvasContext('people-canvas'),
                 textCxt = wx.createCanvasContext('text-canvas'),
-                txtJuhigh = new JuhighText(textCxt,t.words),
-                peoJuhigh = new JuhighPeople(peopleCxt,t.words);
+                txtJuhigh = new JuhighText(textCxt,t.words,platform),
+                peoJuhigh = new JuhighPeople(peopleCxt,t.words,platform);
 
 
             txtJuhigh.init(function(){
                 wx.canvasToTempFilePath({
                   x: 0,
                   y: 0,
-                  destWidth: txtJuhigh.canvas.width,
-                  destHeight: txtJuhigh.canvas.height,
+                  // destWidth: txtJuhigh.canvas.width,
+                  // destHeight: txtJuhigh.canvas.height,
                   canvasId: 'text-canvas',
                   success: function(res) {
                       // console.log('end',res.tempFilePath);
@@ -158,8 +161,8 @@ export default class Index extends wepy.page {
                 wx.canvasToTempFilePath({
                   x: 0,
                   y: 0,
-                  destWidth: peoJuhigh.canvas.width,
-                  destHeight: peoJuhigh.canvas.height,
+                  // destWidth: peoJuhigh.canvas.width,
+                  // destHeight: peoJuhigh.canvas.height,
                   canvasId: 'people-canvas',
                   success: function(res) {
                       // console.log('end',res.tempFilePath);
@@ -173,15 +176,15 @@ export default class Index extends wepy.page {
     },
     toSave(){
 
-        var t = this,startX,startY,
+        var t = this,platform = t.$parent.globalData.platform,
             canvas = wx.createCanvasContext('canvas');
 
         if(!t.words){
             return;
         }
 
-        canvas.width = posJson[t.type].canvas.w;
-        canvas.height = posJson[t.type].canvas.h;
+        canvas.width = posJson[platform][t.type].canvas.w;
+        canvas.height = posJson[platform][t.type].canvas.h;
 
         if(t.bgColor !== 'transparent'){
             canvas.setFillStyle('#'+t.bgColor);
