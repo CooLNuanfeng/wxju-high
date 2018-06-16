@@ -54,8 +54,8 @@ module.exports = {
                 y: 0
             },
             text: {
-                x: 9,
-                y: -23
+                x: 12,
+                y: -19
             }
         },
         image: {
@@ -65,13 +65,13 @@ module.exports = {
             h: 82
         },
         text: {
-            gapX: 19,
-            gapY: .68,
+            gapX: 19.7,
+            gapY: .7,
             scaleX: 1.3,
             scaleY: 1,
             skewH: .5,
             skewV: -1.5,
-            moveX: 2,
+            moveX: 5,
             moveY: 30,
             fontSizeZh: 10,
             fontSizeEn: 14
@@ -83,7 +83,7 @@ module.exports = {
             },
             text: {
                 x: 12,
-                y: 26
+                y: 24
             }
         }
     }
