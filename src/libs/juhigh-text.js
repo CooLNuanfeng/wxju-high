@@ -39,7 +39,7 @@ Juhigh.prototype.drawCanvas = function(){
     t.words = t.words.replace(/\n/g, "£");
 
     t.canvas.transform(t.dimensions.text.scaleX, t.dimensions.text.skewH, t.dimensions.text.skewV, t.dimensions.text.scaleY, t.dimensions.text.moveX, t.dimensions.text.moveY);
-    t.canvas.rotate(-.5 * Math.PI / 180);
+    t.canvas.rotate(-.8 * Math.PI / 180);
 
     t.words.split("").forEach((word)=>{
         if(word === "£"){

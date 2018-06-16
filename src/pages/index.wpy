@@ -1,13 +1,36 @@
 <template>
 <view class="container">
   <view class="area-title">预览</view>
-  <view class="preview">
+  <view class="preview" style="background: #{{bgColor}}">
       <canvas canvas-id="canvas"></canvas>
       <canvas canvas-id="people-canvas"></canvas>
       <canvas canvas-id="text-canvas"></canvas>
   </view>
   <view class="content">
     <textarea value="{{words}}" placeholder="请输入文字，支持空格和换行" maxlength="50" @input="inputFn" />
+  </view>
+  <view class="bg-color">
+      <view class="color-select">
+          <view class="{{bgColor=='transparent'?'active':''}}" @tap="changeColor('transparent')">
+              <image src="../images/empty.png" ></image>透明色
+          </view>
+          <view class="{{bgColor=='ffffff'?'active':''}}" @tap="changeColor('ffffff')">
+              <text class="bg1"></text>ffffff
+          </view>
+          <view class="{{bgColor=='ff01ae'?'active':''}}" @tap="changeColor('ff01ae')">
+              <text class="bg2"></text>ff01ae
+          </view>
+          <view class="{{bgColor=='28d7b0'?'active':''}}" @tap="changeColor('28d7b0')">
+              <text class="bg3"></text>28d7b0
+          </view>
+          <view class="{{bgColor=='77cff0'?'active':''}}" @tap="changeColor('77cff0')">
+              <text class="bg4"></text>77cff0
+          </view>
+      </view>
+      <view class="color-custom">
+          <text>自定义颜色: </text>
+          <input type="text" placeholder="请输入6位颜色值" maxlength="6" @input="inputColor" @blur="blurColor" @focus="focusColor">
+      </view>
   </view>
   <view class="btns">
     <text class="btn-clear" @tap="toClear">清空内容</text>
@@ -30,7 +53,8 @@ export default class Index extends wepy.page {
       words : '',
       peopleImg : '',
       textImg : '',
-      type : 'square'
+      type : 'square',
+      bgColor: 'ffffff'
   }
   onLoad() {
     // console.log(wx.canIUse('canvasContext.draw'));
@@ -45,6 +69,44 @@ export default class Index extends wepy.page {
   }
 
   methods = {
+    changeColor(color){
+        this.bgColor = color;
+    },
+    inputColor(evt){
+        var color = evt.detail.value,
+            re = /^[0-9a-fA-F]{6}$/;
+
+        if(re.test(color)){
+            this.bgColor = evt.detail.value;
+        }else{
+            this.bgColor = 'ffffff';
+        }
+    },
+    focusColor(evt){
+        var color = evt.detail.value;
+        this.bgColor = color;
+    },
+    blurColor(evt){
+        var color = evt.detail.value,
+            re = /^[0-9a-fA-F]{6}$/;
+        if(!color){
+            return;
+        }
+        if(!re.test(color)){
+            this.bgColor = 'ffffff';
+            wx.showModal({
+                title: '提示',
+                content: '颜色值不正确，已改为默认的白色',
+                success: function(res) {
+                    if (res.confirm) {
+                      // console.log('用户点击确定')
+                    } else if (res.cancel) {
+                      // console.log('用户点击取消')
+                    }
+                }
+            })
+        }
+    },
     toClear(){
         var peopleCxt = wx.createCanvasContext('people-canvas'),
             textCxt = wx.createCanvasContext('text-canvas'),
@@ -120,9 +182,11 @@ export default class Index extends wepy.page {
 
         canvas.width = posJson[t.type].canvas.w;
         canvas.height = posJson[t.type].canvas.h;
-        // console.log(canvas.width,canvas.height,'canvas width height');
-        canvas.setFillStyle('#ffffff');
-        canvas.fillRect(0, 0, canvas.width, canvas.height);
+
+        if(t.bgColor !== 'transparent'){
+            canvas.setFillStyle('#'+t.bgColor);
+            canvas.fillRect(0, 0, canvas.width, canvas.height);
+        }
         // setTimeout(function(){
         //     canvas.clearRect(0, 0, canvas.width, canvas.height);
         //     canvas.draw();
@@ -171,8 +235,6 @@ export default class Index extends wepy.page {
 @import '../libs/common.scss';
 .container {
     padding: 20rpx;
-    height: 1000rpx;
-    overflow: hidden;
 }
 .title {
     padding-bottom: 20rpx;
@@ -184,7 +246,7 @@ export default class Index extends wepy.page {
     padding-bottom: 20rpx;
     textarea {
         width: 100%;
-        height: 280rpx;
+        height: 220rpx;
         padding: 10rpx;
         box-sizing: border-box;
         border: 1rpx solid #ddd;
@@ -200,6 +262,70 @@ export default class Index extends wepy.page {
     font-weight: bold;
     color: #111;
 }
+
+.bg-color{
+
+}
+
+.color-select{
+    display: flex;
+    padding: 20rpx 0;
+    view{
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 28rpx;
+        color: #333;
+        &.active{
+            image,text{
+                border: 4rpx solid #000;
+            }
+        }
+        image,text{
+            width: 38rpx;
+            height: 38rpx;
+            border: 1rpx solid #dedede;
+            margin-right: 5rpx;
+            box-sizing: border-box;
+        }
+        text.bg1{
+            background: #ffffff;
+        }
+        text.bg2{
+            background: #ff01ae;
+        }
+        text.bg3{
+            background: #28d7b0;
+        }
+        text.bg4{
+            background: #77cff0;
+        }
+    }
+}
+
+.color-custom{
+    display: flex;
+    align-items: center;
+    padding: 20rpx 0 20rpx;
+    height: 60rpx;
+    text{
+        width: 200rpx;
+        display: inline-flex;
+        height: 60rpx;
+        font-size: 28rpx;
+        align-items: center;
+    }
+    input{
+        display: inline-flex;
+        width: 200rpx;
+        height: 60rpx;
+        font-size: 24rpx;
+        padding-left: 20rpx;
+        align-items: center;
+    }
+}
+
 .result {
     padding-top: 30rpx;
     .result-warp{

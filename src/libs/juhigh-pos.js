@@ -66,7 +66,7 @@ module.exports = {
         },
         text: {
             gapX: 19.7,
-            gapY: .7,
+            gapY: .95,
             scaleX: 1.3,
             scaleY: 1,
             skewH: .5,
