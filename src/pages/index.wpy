@@ -64,7 +64,7 @@ export default class Index extends wepy.page {
   onShareAppMessage() {
       return {
         title: '举牌表情生成器',
-        path: '/page/index'
+        path: '/pages/index'
       }
   }
 
