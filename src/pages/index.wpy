@@ -1,9 +1,6 @@
 <template>
 <view class="container">
-  <view class="area-title">
-      <text>预览区</text>
-      <text>PS：输入文字即刻预览，长按预览区可直接发送</text>
-  </view>
+  <view class="area-title"><text>预览区</text></view>
   <view class="preview" style="background: #{{bgColor}}" @longtap="longTap">
       <canvas canvas-id="canvas"></canvas>
       <canvas canvas-id="people-canvas"></canvas>
@@ -37,11 +34,8 @@
   </view>
   <view class="btns">
     <text class="btn-clear" @tap="toClear">清空内容</text>
-    <text class="btn-save {{!words?'btn-disable':''}}" @tap="toSave">保存到相册</text>
-  </view>
-  <view class="dialog-img" hidden="{{showDialog}}">
-      <image class="dialog-close" src="../images/close.png"></image>
-      <image src="{{resultImg}}"></image>
+    <text class="btn-save {{!words?'btn-disable':''}}" @tap="toSave('send')">直接发送</text>
+    <text class="btn-save {{!words?'btn-disable':''}}" @tap="toSave('save')">保存到相册</text>
   </view>
 </view>
 </template>
@@ -62,108 +56,20 @@ export default class Index extends wepy.page {
       textImg : '',
       type : 'square',
       bgColor: 'ffffff',
-      showDialog: true,
-      resultImg: '',
+      resultImg: ''
   }
   onLoad() {
     // console.log(wx.canIUse('canvasContext.draw'));
     // console.log('version: ',wx.getSystemInfoSync());
   }
-
   onShareAppMessage() {
       return {
         title: '举牌表情生成器',
-        path: '/page/index'
+        path: '/pages/index'
       }
-  }
-  toQueue(){
-      var t = this,
-          platform = t.$parent.globalData.platform,
-          peopleCxt = wx.createCanvasContext('people-canvas'),
-          textCxt = wx.createCanvasContext('text-canvas'),
-          txtJuhigh = new JuhighText(textCxt,t.words,platform),
-          peoJuhigh = new JuhighPeople(peopleCxt,t.words,platform);
-
-      var p1,p2;
-      txtJuhigh.init(function(){
-          p1 = new Promise(function(resolve,reject){
-              wx.canvasToTempFilePath({
-                x: 0,
-                y: 0,
-                canvasId: 'text-canvas',
-                success: function(res) {
-                    // console.log('end',res.tempFilePath);
-                    t.textImg = res.tempFilePath;
-                    resolve();
-                },
-                fail: function(){
-                    reject()
-                }
-              })
-          });
-      });
-      peoJuhigh.init(function(){
-          p2 = new Promise(function(resolve,reject){
-              wx.canvasToTempFilePath({
-                x: 0,
-                y: 0,
-                canvasId: 'people-canvas',
-                success: function(res) {
-                    t.peopleImg = res.tempFilePath;
-                    resolve();
-                },
-                fail: function(){
-                    reject();
-                }
-              })
-          })
-      });
-
-      Promise.all([p1,p2]).then(()=>{
-          var canvas = wx.createCanvasContext('canvas');
-
-          canvas.width = posJson[platform][t.type].canvas.w;
-          canvas.height = posJson[platform][t.type].canvas.h;
-
-          if(t.bgColor !== 'transparent'){
-              canvas.setFillStyle('#'+t.bgColor);
-              canvas.fillRect(0, 0, canvas.width, canvas.height);
-          }
-
-          canvas.drawImage(t.peopleImg, 0,0,canvas.width/2,canvas.height/2);
-          canvas.drawImage(t.textImg, 0,0,canvas.width/2,canvas.height/2);
-          console.log('draw aa');
-          canvas.draw(false,function(){
-              console.log('draw bb');
-              wx.canvasToTempFilePath({
-                x: 0,
-                y: 0,
-                canvasId: 'canvas',
-                success: function(res) {
-                    console.log('draw end',res.tempFilePath);
-                    t.resultImg = res.tempFilePath;
-                    t.showDialog = false;
-                },
-                fail: function(){
-                  console.log('fail');
-                }
-              })
-          })
-      })
   }
 
   methods = {
-    longTap(){
-        if(this.words){
-            this.toQueue();
-        }else{
-            wx.showModal({
-              title: '提示',
-              content: '请先输入文字',
-              showCancel: false
-           })
-        }
-    },
     changeColor(color){
         this.bgColor = color;
     },
@@ -192,7 +98,13 @@ export default class Index extends wepy.page {
             wx.showModal({
                 title: '提示',
                 content: '颜色值不正确，已改为默认的白色',
-                showCancel: false
+                success: function(res) {
+                    if (res.confirm) {
+                      // console.log('用户点击确定')
+                    } else if (res.cancel) {
+                      // console.log('用户点击取消')
+                    }
+                }
             })
         }
     },
@@ -216,7 +128,13 @@ export default class Index extends wepy.page {
             wx.showModal({
                 title: '提示',
                 content: '为了图片更加美观，请保持在50个文字以内',
-                showCancel: false
+                success: function(res) {
+                    if (res.confirm) {
+                      // console.log('用户点击确定')
+                    } else if (res.cancel) {
+                      // console.log('用户点击取消')
+                    }
+                }
             })
         }else{
             // console.log(platform,'input');
@@ -257,7 +175,7 @@ export default class Index extends wepy.page {
 
         }
     },
-    toSave(){
+    toSave(method){
 
         var t = this,platform = t.$parent.globalData.platform,
             canvas = wx.createCanvasContext('canvas');
@@ -273,6 +191,12 @@ export default class Index extends wepy.page {
             canvas.setFillStyle('#'+t.bgColor);
             canvas.fillRect(0, 0, canvas.width, canvas.height);
         }
+        // setTimeout(function(){
+        //     canvas.clearRect(0, 0, canvas.width, canvas.height);
+        //     canvas.draw();
+        // },2000);
+        // canvas.draw();
+        // return;
 
         canvas.drawImage(t.peopleImg, 0,0,canvas.width/2,canvas.height/2);
         canvas.drawImage(t.textImg, 0,0,canvas.width/2,canvas.height/2);
@@ -286,20 +210,32 @@ export default class Index extends wepy.page {
               success: function(res) {
                   // console.log('draw end',res.tempFilePath);
                   t.resultImg = res.tempFilePath;
-                  wx.saveImageToPhotosAlbum({
-                      filePath: res.tempFilePath,
-                      success: function(){
-                          wx.showToast({
-                              title: '成功',
-                              icon: 'success',
-                              duration: 2000
-                          });
-                          setTimeout(()=>{
-                              canvas.clearRect(0, 0, canvas.width, canvas.height);
-                              canvas.draw();
-                          },10);
-                      }
-                  });
+                  if(method == 'save'){
+                      wx.saveImageToPhotosAlbum({
+                          filePath: res.tempFilePath,
+                          success: function(){
+                              wx.showToast({
+                                  title: '成功',
+                                  icon: 'success',
+                                  duration: 2000
+                              });
+                              setTimeout(()=>{
+                                  canvas.clearRect(0, 0, canvas.width, canvas.height);
+                                  canvas.draw();
+                              },10);
+                          }
+                      })
+                  }else{
+                      wx.previewImage({
+                          current: t.resultImg,
+                          urls: [t.resultImg]
+                      });
+                      setTimeout(()=>{
+                          canvas.clearRect(0, 0, canvas.width, canvas.height);
+                          canvas.draw();
+                      },10);
+                  }
+
               },
               fail: function(){
                 console.log('fail');
@@ -344,10 +280,6 @@ export default class Index extends wepy.page {
     text-align: center;
     font-weight: bold;
     color: #111;
-    text:last-child{
-        font-size: 28rpx;
-        color: #f8156b;
-    }
 }
 
 .color-select{
@@ -475,21 +407,32 @@ export default class Index extends wepy.page {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0,0,0,1);
-    z-index: 10;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    img{
+    padding: 0 120rpx;
+    background: rgba(0,0,0,1);
+    z-index: 10;
+    text{
+        position: absolute;
+        top: 150rpx;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 30rpx;
+        color: #fff;
+    }
+    image{
         width: 100%;
     }
+    .dialog-close{
+        position: absolute;
+        right: 40rpx;
+        top: 40rpx;
+        width: 60rpx;
+        height: 60rpx;
+    }
 }
-.dialog-close{
-    position: absolute;
-    right: 40rpx;
-    top: 40rpx;
-    width: 60rpx;
-    height: 60rpx;
-}
+
 
 </style>
