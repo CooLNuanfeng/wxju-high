@@ -24,7 +24,9 @@ export default class extends wepy.app {
         platform = 'ios'
     }
     this.globalData.platform = platform;
-    // console.log(this.globalData.platform,'on launch')
+    wx.authorize({
+        scope: 'scope.writePhotosAlbum'
+    });
   }
 
 }

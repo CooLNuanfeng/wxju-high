@@ -59,8 +59,7 @@ export default class Index extends wepy.page {
       resultImg: ''
   }
   onLoad() {
-    // console.log(wx.canIUse('canvasContext.draw'));
-    // console.log('version: ',wx.getSystemInfoSync());
+    
   }
   onShareAppMessage() {
       return {
@@ -115,6 +114,7 @@ export default class Index extends wepy.page {
             platform = t.$parent.globalData.platform;
 
         t.words = '';
+        t.bgColor = 'ffffff';
         peopleCxt.clearRect(0, 0, posJson[platform][t.type].canvas.w, posJson[platform][t.type].canvas.w);
         textCxt.clearRect(0, 0, posJson[platform][t.type].canvas.w, posJson[platform][t.type].canvas.w);
         peopleCxt.draw();
