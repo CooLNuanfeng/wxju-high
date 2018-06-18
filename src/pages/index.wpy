@@ -101,13 +101,7 @@ export default class Index extends wepy.page {
             wx.showModal({
                 title: '提示',
                 content: '颜色值不正确，已改为默认的白色',
-                success: function(res) {
-                    if (res.confirm) {
-                      // console.log('用户点击确定')
-                    } else if (res.cancel) {
-                      // console.log('用户点击取消')
-                    }
-                }
+                showCancel: false
             })
         }
     },
@@ -131,10 +125,8 @@ export default class Index extends wepy.page {
         t.words = evt.detail.value;
 
         if(t.words){
-            console.log('ddd');
             t.textHidden = true;
         }else{
-            console.log('vv');
             t.textHidden = false;
         }
 
@@ -142,13 +134,7 @@ export default class Index extends wepy.page {
             wx.showModal({
                 title: '提示',
                 content: '为了图片更加美观，请保持在50个文字以内',
-                success: function(res) {
-                    if (res.confirm) {
-                      // console.log('用户点击确定')
-                    } else if (res.cancel) {
-                      // console.log('用户点击取消')
-                    }
-                }
+                showCancel: false
             })
         }else{
             // console.log(platform,'input');

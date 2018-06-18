@@ -8,7 +8,7 @@
     "build": "cross-env NODE_ENV=production wepy build --no-cache",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "CooLNuanfeng <1634898698@qq.com>",
+  "author": "nuanfeng <1634898698@qq.com>",
   "license": "MIT",
   "dependencies": {
     "wepy": "^1.6.0"
