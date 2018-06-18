@@ -1,10 +1,13 @@
 <template>
 <view class="container">
-  <view class="area-title"><text>预览区</text></view>
-  <view class="preview" style="background: #{{bgColor}}" @longtap="longTap">
+  <!-- <view class="area-title"><text>预览区</text></view> -->
+  <view class="preview" style="background: #{{bgColor}}">
       <canvas canvas-id="canvas"></canvas>
       <canvas canvas-id="people-canvas"></canvas>
       <canvas canvas-id="text-canvas"></canvas>
+      <view class="text-bg" hidden="{{textHidden}}">
+          <view>预览区</view>
+      </view>
   </view>
   <view class="content">
     <textarea value="{{words}}" placeholder="请输入文字，支持空格和换行" maxlength="50" @input="inputFn" />
@@ -56,10 +59,11 @@ export default class Index extends wepy.page {
       textImg : '',
       type : 'square',
       bgColor: 'ffffff',
-      resultImg: ''
+      resultImg: '',
+      textHidden: false
   }
   onLoad() {
-    
+
   }
   onShareAppMessage() {
       return {
@@ -115,6 +119,7 @@ export default class Index extends wepy.page {
 
         t.words = '';
         t.bgColor = 'ffffff';
+        t.textHidden = false;
         peopleCxt.clearRect(0, 0, posJson[platform][t.type].canvas.w, posJson[platform][t.type].canvas.w);
         textCxt.clearRect(0, 0, posJson[platform][t.type].canvas.w, posJson[platform][t.type].canvas.w);
         peopleCxt.draw();
@@ -124,6 +129,15 @@ export default class Index extends wepy.page {
         var t = this,platform = t.$parent.globalData.platform;
 
         t.words = evt.detail.value;
+
+        if(t.words){
+            console.log('ddd');
+            t.textHidden = true;
+        }else{
+            console.log('vv');
+            t.textHidden = false;
+        }
+
         if (t.words.length >= 50) {
             wx.showModal({
                 title: '提示',
@@ -369,7 +383,24 @@ export default class Index extends wepy.page {
         width: 500rpx;
         height: 500rpx;
     }
+
 }
+.text-bg{
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 50rpx;
+    color: #999;
+    view{
+        width: 500rpx;
+        height: 500rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+
 .btns {
     display: flex;
     text {
@@ -399,39 +430,6 @@ export default class Index extends wepy.page {
 }
 .btn-disable{
     opacity: .5;
-}
-
-.dialog-img{
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 0 120rpx;
-    background: rgba(0,0,0,1);
-    z-index: 10;
-    text{
-        position: absolute;
-        top: 150rpx;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 30rpx;
-        color: #fff;
-    }
-    image{
-        width: 100%;
-    }
-    .dialog-close{
-        position: absolute;
-        right: 40rpx;
-        top: 40rpx;
-        width: 60rpx;
-        height: 60rpx;
-    }
 }
 
 
