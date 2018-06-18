@@ -94,6 +94,7 @@ export default class Index extends wepy.page {
         var color = evt.detail.value,
             re = /^[0-9a-fA-F]{6}$/;
         if(!color){
+            this.bgColor = 'ffffff';
             return;
         }
         if(!re.test(color)){
