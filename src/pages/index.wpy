@@ -1,6 +1,5 @@
 <template>
 <view class="container">
-  <!-- <view class="area-title"><text>预览区</text></view> -->
   <view class="preview" style="background: #{{bgColor}}">
       <canvas canvas-id="canvas"></canvas>
       <canvas canvas-id="people-canvas"></canvas>
@@ -39,6 +38,13 @@
     <text class="btn-clear" @tap="toClear">清空内容</text>
     <text class="btn-save {{!words?'btn-disable':''}}" @tap="toSave('send')">直接发送</text>
     <text class="btn-save {{!words?'btn-disable':''}}" @tap="toSave('save')">保存到相册</text>
+  </view>
+  <view class="area-title">使用说明</view>
+  <view class="tutoial">
+      <image src="../images/tutoial01.jpg" style="height:553rpx"></image>
+      <image src="../images/tutoial02.jpg" style="height:1128rpx"></image>
+      <image src="../images/tutoial03.jpg" style="height:1054rpx"></image>
+      <image src="../images/tutoial04.jpg" style="height:500rpx"></image>
   </view>
 </view>
 </template>
@@ -273,10 +279,7 @@ export default class Index extends wepy.page {
     }
 }
 .area-title{
-    display: flex;
-    flex-direction: column;
-    padding: 0 20rpx;
-    margin-bottom: 15rpx;
+    padding: 40rpx 0 20rpx;
     font-size: 32rpx;
     text-align: center;
     font-weight: bold;
@@ -418,6 +421,11 @@ export default class Index extends wepy.page {
 .btn-disable{
     opacity: .5;
 }
-
+.tutoial{
+    text-align: center;
+    image{
+        width: 100%;
+    }
+}
 
 </style>
