@@ -40,7 +40,7 @@ Juhigh.prototype.drawCanvas = function(){
 
     t.words = t.words.replace(/\n/g, "£");
 
-    t.canvas.transform(t.dimensions.text.scaleX, t.dimensions.text.skewH, t.dimensions.text.skewV, t.dimensions.text.scaleY, t.dimensions.text.moveX, t.dimensions.text.moveY);
+    t.canvas.setTransform(t.dimensions.text.scaleX, t.dimensions.text.skewH, t.dimensions.text.skewV, t.dimensions.text.scaleY, t.dimensions.text.moveX, t.dimensions.text.moveY);
 
     if(t.platform == 'android'){
         t.canvas.rotate(-6.3 * Math.PI / 180);
