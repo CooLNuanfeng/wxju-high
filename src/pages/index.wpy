@@ -39,10 +39,9 @@
     <text class="btn-save {{!words?'btn-disable':''}}" @tap="toSave('send')">直接发送</text>
     <text class="btn-save {{!words?'btn-disable':''}}" @tap="toSave('save')">保存到相册</text>
   </view>
-  <view class="area-title">如果觉得不错就打赏下吧 \(^o^)/~</view>
+  <view class="area-title">如果觉得不错就打赏支持下吧 \(^o^)/~</view>
   <view class="area-award" @tap="toAward">
       <canvas canvas-id="award-canvas"></canvas>
-      <!-- <image class="award-img" mode="widthFix" src="../images/award.jpg" ></image> -->
   </view>
   <view class="area-title">使用说明</view>
   <view class="tutoial">
@@ -77,7 +76,7 @@ export default class Index extends wepy.page {
   onLoad() {
       var t = this,
       awardCanvas = wx.createCanvasContext('award-canvas');
-      awardCanvas.drawImage('../images/award.jpg', 0, 0, 300,407);
+      awardCanvas.drawImage('../images/award.jpg', 0, 0, 225, 225);
       awardCanvas.draw();
   }
   onShareAppMessage() {
@@ -443,9 +442,11 @@ export default class Index extends wepy.page {
     }
 }
 .area-award{
+    padding: 20rpx;
     canvas{
-        width: 750rpx;
-        height: 1018rpx;
+        width: 450rpx;
+        height: 450rpx;
+        margin: 0 auto;
     }
 }
 
