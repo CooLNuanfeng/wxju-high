@@ -39,12 +39,17 @@
     <text class="btn-save {{!words?'btn-disable':''}}" @tap="toSave('send')">直接发送</text>
     <text class="btn-save {{!words?'btn-disable':''}}" @tap="toSave('save')">保存到相册</text>
   </view>
+  <view class="area-title">如果觉得不错就打赏下吧 \(^o^)/~</view>
+  <view class="area-award" @tap="toAward">
+      <canvas canvas-id="award-canvas"></canvas>
+      <!-- <image class="award-img" mode="widthFix" src="../images/award.jpg" ></image> -->
+  </view>
   <view class="area-title">使用说明</view>
   <view class="tutoial">
-      <image src="../images/tutoial01.jpg" style="height:553rpx"></image>
-      <image src="../images/tutoial02.jpg" style="height:1128rpx"></image>
-      <image src="../images/tutoial03.jpg" style="height:1054rpx"></image>
-      <image src="../images/tutoial04.jpg" style="height:500rpx"></image>
+      <image src="../images/tutoial01.jpg" mode="widthFix"></image>
+      <image src="../images/tutoial02.jpg" mode="widthFix"></image>
+      <image src="../images/tutoial03.jpg" mode="widthFix"></image>
+      <image src="../images/tutoial04.jpg" mode="widthFix"></image>
   </view>
 </view>
 </template>
@@ -66,10 +71,14 @@ export default class Index extends wepy.page {
       type : 'square',
       bgColor: 'ffffff',
       resultImg: '',
-      textHidden: false
+      textHidden: false,
+      awardUrl: ''
   }
   onLoad() {
-
+      var t = this,
+      awardCanvas = wx.createCanvasContext('award-canvas');
+      awardCanvas.drawImage('../images/award.jpg', 0, 0, 300,407);
+      awardCanvas.draw();
   }
   onShareAppMessage() {
       return {
@@ -198,12 +207,6 @@ export default class Index extends wepy.page {
             canvas.setFillStyle('#'+t.bgColor);
             canvas.fillRect(0, 0, canvas.width, canvas.height);
         }
-        // setTimeout(function(){
-        //     canvas.clearRect(0, 0, canvas.width, canvas.height);
-        //     canvas.draw();
-        // },2000);
-        // canvas.draw();
-        // return;
 
         canvas.drawImage(t.peopleImg, 0,0,canvas.width/2,canvas.height/2);
         canvas.drawImage(t.textImg, 0,0,canvas.width/2,canvas.height/2);
@@ -249,7 +252,19 @@ export default class Index extends wepy.page {
               }
             })
         })
-
+    },
+    toAward(){
+        wx.canvasToTempFilePath({
+          x: 0,
+          y: 0,
+          canvasId: 'award-canvas',
+          success: function(res) {
+              wx.previewImage({
+                  current: res.tempFilePath,
+                  urls: [res.tempFilePath]
+              });
+          }
+        });
     }
   }
 }
@@ -426,6 +441,16 @@ export default class Index extends wepy.page {
     image{
         width: 100%;
     }
+}
+.area-award{
+    canvas{
+        width: 750rpx;
+        height: 1018rpx;
+    }
+}
+
+.award-img{
+    width: 100%;
 }
 
 </style>
