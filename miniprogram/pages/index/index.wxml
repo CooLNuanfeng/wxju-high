@@ -1,0 +1,52 @@
+<view class="container">
+  <view class="preview" style="background: #{{bgColor}}">
+      <canvas id="canvas" type="2d"></canvas>
+      <canvas id="people-canvas" type="2d"></canvas>
+      <canvas id="text-canvas" type="2d"></canvas>
+      <view class="text-bg" hidden="{{textHidden}}">
+          <view>预览区</view>
+      </view>
+  </view>
+  <view class="content">
+    <textarea value="{{words}}" placeholder="请输入文字，支持空格和换行" maxlength="50" bindinput="inputFn" />
+  </view>
+  <view class="bg-color">
+    <view class="color-select">
+      <view class="{{bgColor=='transparent'?'active':''}}" bindtap="changeColor" data-color="transparent">
+          <image src="/images/empty.png" ></image>透明色
+      </view>
+      <view class="{{bgColor=='ffffff'?'active':''}}" bindtap="changeColor" data-color="ffffff">
+          <text class="bg1"></text>ffffff
+      </view>
+      <view class="{{bgColor=='ff01ae'?'active':''}}" bindtap="changeColor" data-color="ff01ae">
+          <text class="bg2"></text>ff01ae
+      </view>
+      <view class="{{bgColor=='28d7b0'?'active':''}}" bindtap="changeColor" data-color="28d7b0">
+          <text class="bg3"></text>28d7b0
+      </view>
+      <view class="{{bgColor=='77cff0'?'active':''}}" bindtap="changeColor" data-color="77cff0">
+          <text class="bg4"></text>77cff0
+      </view>
+    </view>
+    <view class="color-custom">
+        <text>自定义颜色: </text>
+        <input type="text" placeholder="请输入6位颜色值" maxlength="6" bindinput="inputColor" bindblur="blurColor" bindfocus="focusColor" />
+    </view>
+  </view>
+  <view class="btns">
+    <text class="btn-clear" bindtap="toClear">清空内容</text>
+    <text class="btn-save {{!words?'btn-disable':''}}" bindtap="toSave" data-type="send">直接发送</text>
+    <text class="btn-save {{!words?'btn-disable':''}}" bindtap="toSave" data-type="save">保存到相册</text>
+  </view>
+  <view class="area-title">如果觉得不错就打赏支持下吧 \(^o^)/~</view>
+  <view class="area-award" bindtap="toAward">
+      <canvas id="award-canvas" type="2d"></canvas>
+  </view>
+  <view class="area-title">使用说明</view>
+  <view class="tutoial">
+      <image src="/images/tutoial01.jpg" mode="widthFix"></image>
+      <image src="/images/tutoial02.jpg" mode="widthFix"></image>
+      <image src="/images/tutoial03.jpg" mode="widthFix"></image>
+      <image src="/images/tutoial04.jpg" mode="widthFix"></image>
+  </view>
+</view>

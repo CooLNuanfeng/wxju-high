@@ -1,0 +1,199 @@
+/* pages/index/index.wxss */
+.container {
+  padding: 20rpx;
+}
+.title {
+  padding-bottom: 20rpx;
+  text-align: center;
+  font-size: 40rpx;
+  color: #333;
+}
+.content {
+  width: 100%;
+  padding-bottom: 20rpx;
+}
+.content textarea {
+  width: 100%;
+  height: 120rpx;
+  padding: 10rpx;
+  box-sizing: border-box;
+  border: 1rpx solid #ddd;
+  border-radius: 4rpx;
+  font-size: 28rpx;
+}
+
+
+.area-title{
+  padding: 40rpx 0 20rpx;
+  font-size: 32rpx;
+  text-align: center;
+  font-weight: bold;
+  color: #111;
+}
+
+.bg-color{
+  width: 100%;
+}
+
+.color-select{
+  display: flex;
+  padding: 20rpx 0;
+}
+.color-select > view{
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.color-select view.active image,text{
+  border: 4rpx solid #000;
+}
+
+.color-select view image,text{
+  width: 38rpx;
+  height: 38rpx;
+  border: 1rpx solid #dedede;
+  margin-right: 5rpx;
+  box-sizing: border-box;
+}
+.color-select view text.bg1{
+  background: #ffffff;
+}
+.color-select view text.bg2{
+  background: #ff01ae;
+}
+.color-select view text.bg3{
+  background: #28d7b0;
+}
+.color-select view text.bg4{
+  background: #77cff0;
+}
+
+
+
+.color-custom{
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0 20rpx;
+  height: 60rpx;
+}
+
+.color-custom text{
+  width: 200rpx;
+  display: inline-flex;
+  height: 60rpx;
+  font-size: 28rpx;
+  align-items: center;
+}
+.color-custom input{
+  display: inline-flex;
+  width: 200rpx;
+  height: 60rpx;
+  font-size: 24rpx;
+  padding-left: 20rpx;
+  align-items: center;
+}
+
+
+.result {
+  padding-top: 30rpx;
+}
+
+.result .result-warp{
+  width: 500rpx;
+  margin: 0 auto;
+  border: 1rpx solid #dedede;
+  border-radius: 4rpx;
+}
+.result canvas{
+  width: 500rpx;
+  height: 500rpx;
+}
+
+.preview{
+  position: relative;
+  width: 500rpx;
+  height: 500rpx;
+  margin: 0 auto;
+  border: 1rpx solid #dedede;
+  border-radius: 4rpx;
+  margin-bottom: 20rpx;
+}
+
+.preview canvas{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 500rpx;
+  height: 500rpx;
+}
+.text-bg{
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 50rpx;
+  color: #999;
+}
+
+.text-bg view{
+  width: 500rpx;
+  height: 500rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btns {
+  display: flex;
+  width: 100%;
+}
+.btns text {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border-radius: 4px;
+  height: 80rpx;
+  font-size: 26rpx;
+}
+
+.btn-clear {
+  margin-right: 20rpx;
+  border: 1rpx solid #38b7ea;
+  color: #38b7ea;
+  font-weight: bold;
+  background: #fff;
+}
+.btn-save {
+  margin-left: 20rpx;
+  background: #38b7ea;
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: bold;
+}
+.btn-disable{
+  opacity: .5;
+}
+.tutoial{
+  text-align: center;
+}
+.tutoial image{
+  width: 100%;
+}
+.area-award{
+  padding: 20rpx;
+}
+
+.area-award canvas{
+  width: 450rpx;
+  height: 450rpx;
+  margin: 0 auto;
+}
+
+.award-img{
+  width: 100%;
+}
