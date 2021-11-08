@@ -25,16 +25,9 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    // utils.getCanvasContext('award-canvas').then(({ctx, canvas})=>{
-    //   const imgObj = canvas.createImage()
-    //   imgObj.src = '/images/award.jpg'
-    //   imgObj.width = 255
-    //   imgObj.height = 255
-    //   imgObj.onload = function(){
-    //     ctx.drawImage(imgObj, 0, 0, 225, 225);
-    //     ctx.draw();
-    //   }
-    // })
+    var awardCanvas = wx.createCanvasContext('award-canvas');
+      awardCanvas.drawImage('/images/award.jpg', 0, 0, 225, 225);
+      awardCanvas.draw();
   },
 
   changeColor(e){
@@ -74,9 +67,8 @@ Page({
       }
   },
   toClear(){
-      const query = wx.createSelectorQuery().in(this)
-      var peopleCxt = query.select('people-canvas'),
-          textCxt = query.select('text-canvas'),
+    var peopleCxt = wx.createCanvasContext('people-canvas'),
+        textCxt = wx.createCanvasContext('text-canvas'),
           t = this.data,
           platform = app.globalData.platform;
       this.setData({
@@ -89,7 +81,7 @@ Page({
       peopleCxt.draw();
       textCxt.draw();
   },
-  async inputFn(evt) {
+  inputFn(evt) {
       let platform = app.globalData.platform;
       console.log(evt.detail)
       this.setData({
@@ -105,17 +97,13 @@ Page({
           })
       }else{
           // console.log(platform,'input');
-          // var peopleCxt = query.select('people-canvas'),
-          //     textCxt = query.select('text-canvas'),
-          //     txtJuhigh = new JuhighText(textCxt,this.data.words,platform),
-          //     peoJuhigh = new JuhighPeople(peopleCxt,this.data.words,platform);
-          let peopleCanvasObj = await utils.getCanvasContext('people-canvas')
-          let textCanvasObj = await utils.getCanvasContext('text-canvas')
-          var peopleCxt = peopleCanvasObj.ctx
-          var textCxt = textCanvasObj.ctx
-          var txtJuhigh = new JuhighText(textCxt,this.data.words,platform);
-          var peoJuhigh = new JuhighPeople(peopleCxt,this.data.words,platform);
-          console.log(peopleCxt)
+          var peopleCxt = wx.createCanvasContext('people-canvas'),
+                textCxt = wx.createCanvasContext('text-canvas'),
+                t = this.data,
+                txtJuhigh = new JuhighText(textCxt,t.words,platform),
+                peoJuhigh = new JuhighPeople(peopleCxt,t.words,platform);
+
+
           txtJuhigh.init(()=>{
               wx.canvasToTempFilePath({
                 x: 0,

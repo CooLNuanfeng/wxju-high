@@ -1,8 +1,8 @@
 <view class="container">
   <view class="preview" style="background: #{{bgColor}}">
-      <canvas id="canvas" type="2d"></canvas>
-      <canvas id="people-canvas" type="2d"></canvas>
-      <canvas id="text-canvas" type="2d"></canvas>
+      <canvas canvas-id="canvas"></canvas>
+      <canvas canvas-id="people-canvas"></canvas>
+      <canvas canvas-id="text-canvas"></canvas>
       <view class="text-bg" hidden="{{textHidden}}">
           <view>预览区</view>
       </view>
@@ -40,7 +40,7 @@
   </view>
   <view class="area-title">如果觉得不错就打赏支持下吧 \(^o^)/~</view>
   <view class="area-award" bindtap="toAward">
-      <canvas id="award-canvas" type="2d"></canvas>
+    <canvas canvas-id="award-canvas"></canvas>
   </view>
   <view class="area-title">使用说明</view>
   <view class="tutoial">
